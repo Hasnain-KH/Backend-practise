@@ -9,8 +9,6 @@ let users = [
 ]
 app.use(express.json());
 
-
-
 app.get('/', (req, res) => {
     res.send('Hello, World!');
 });
@@ -20,7 +18,7 @@ app.get('/users', (req, res) => {
 });
 
 
-app.post('/users', (req, res) => {
+app.post('/users/', (req, res) => {
     const newUser = { id: users.length + 1, ...req.body };
 
     users.push(newUser);
@@ -35,12 +33,20 @@ app.delete('/users/:id', (req, res) => {
     res.send(`User with ID ${userId} deleted successfully`);
 });
 
+app.put('/users/:id', (req, res) => {
+    const userId = Number(req.params.id);
 
-app.delete('/users', (req, res) => {
-    const userID = req.params.id;
-    users = users.filter((user) => user.id !== userID);
-    res.send(`User with ID ${userID} deleted successfully`);
-})
+    const user = users.find(usser => usser.id === userId);
+
+    if (!user) {
+        return res.send("User not Found!");
+    }
+
+    user.name = req.body.name;
+    user.email = req.body.email;
+
+    res.send("User updated Successfully!");
+});
 
 
 app.listen(port, () => {
