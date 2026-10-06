@@ -28,7 +28,7 @@ router.get('/users/:id', (req, res) => {
 
     const user = myusers.find((u) => userID === u.id);
     if (!user) {
-        res.status(404).send({
+        return res.status(404).send({
             status: '404',
             message: 'User not found'
         });
@@ -43,12 +43,26 @@ router.get('/users/:id', (req, res) => {
 
 
 router.post('/users', (req, res) => {
-    if (!req.body.name || !req.body.email) {
+    const { name, email } = req.body;
+
+
+    if (!name || !email) {
         return res.status(400).send({
             status: 400,
             message: 'Name and email are required'
+
         })
     }
+
+    if (!email.endsWith("@gmail.com")) {
+        return res.status(400).send({
+            status: 400,
+            message: 'Email must be a valid Gmail address'
+        });
+    }
+
+
+
     const user = {
         ...req.body,
         id: myusers.length + 1
@@ -67,13 +81,11 @@ router.delete('/users/:id', (req, res) => {
     const userID = Number(req.params.id);
     const userIndex = myusers.findIndex((usser) => userID === usser.id);
     if (userIndex === -1) {
-        status(404).send({ status: 404, message: 'User not found' });
+        return res.status(404).send({ status: 404, message: 'User not found' });
     }
     myusers.splice(userIndex, 1);
     res.status(200).send({ status: 200, message: 'User deleted successfully' });
 })
-
-
 
 
 export default router;
