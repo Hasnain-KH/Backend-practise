@@ -1,7 +1,5 @@
 import express from "express";
-
 const router = express.Router();
-
 
 let myusers = [
     {
@@ -42,8 +40,6 @@ router.get('/users/:id', (req, res) => {
     });
 })
 
-
-
 router.post('/users', (req, res) => {
     const { name, email } = req.body;
 
@@ -51,7 +47,6 @@ router.post('/users', (req, res) => {
         return res.status(400).send({
             status: 400,
             message: 'Name and email are required'
-
         })
     }
 
@@ -119,21 +114,12 @@ router.put('/users/:id', (req, res) => {
     if (!email.endsWith("@gmail.com")) {
         return res.status(400).send({ status: 400, message: "Incorrect Email format, " })
     }
-
-
-    // if (name === name || email === "") {
-    //     return res.status(400).send({ status: 400, message: "Email is required" })
-    // }
-
     myusers[userIndex] = {
         id: userID,
         name,
         email,
 
     }
-
-
-
 })
 
 
