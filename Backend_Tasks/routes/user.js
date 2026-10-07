@@ -17,6 +17,8 @@ let myusers = [
 ];
 
 
+let nextUserID = 3;
+
 //all users
 router.get('/users', (_req, res) => {
     res.status(200).send({ status: '200', message: 'Users fetched successfully', data: myusers });
@@ -45,14 +47,24 @@ router.get('/users/:id', (req, res) => {
 router.post('/users', (req, res) => {
     const { name, email } = req.body;
 
-
-    if (!name || !email) {
+    if (!name && !email) {
         return res.status(400).send({
             status: 400,
             message: 'Name and email are required'
 
         })
     }
+
+
+    if (name && !email) {
+        return res.status(400).send({ status: 400, message: "Email is Required" })
+    }
+
+
+    if (!name && email) {
+        return res.status(400).send({ status: 400, message: "Name is Required" })
+    }
+
 
     if (!email.endsWith("@gmail.com")) {
         return res.status(400).send({
@@ -62,10 +74,10 @@ router.post('/users', (req, res) => {
     }
 
 
-
     const user = {
-        ...req.body,
-        id: myusers.length + 1
+        id: nextUserID++,
+        ...req.body
+
     }
 
     myusers.push(user);
@@ -86,6 +98,51 @@ router.delete('/users/:id', (req, res) => {
     myusers.splice(userIndex, 1);
     res.status(200).send({ status: 200, message: 'User deleted successfully' });
 })
+
+
+router.put('/users/:id', (req, res) => {
+
+    const { name, email } = req.body;
+
+    const userID = Number(req.params.id);
+    const userIndex = myusers.findIndex((u) => userID === u.id);
+
+    if (!name || !email) {
+        return res.status(400).send({ status: 400, message: "Name and Email Required" })
+    }
+
+
+
+    if (userIndex === -1) {
+        return res.status(404).send({ status: "404", message: "usernot found", });
+    }
+    if (!email.endsWith("@gmail.com")) {
+        return res.status(400).send({ status: 400, message: "Incorrect Email format, " })
+    }
+
+
+    // if (name === name || email === "") {
+    //     return res.status(400).send({ status: 400, message: "Email is required" })
+    // }
+
+    myusers[userIndex] = {
+        id: userID,
+        name,
+        email,
+
+    }
+
+
+
+})
+
+
+
+
+
+
+
+
 
 
 export default router;
