@@ -107,7 +107,6 @@ router.put('/users/:id', (req, res) => {
     }
 
 
-
     if (userIndex === -1) {
         return res.status(404).send({ status: "404", message: "usernot found", });
     }
@@ -118,12 +117,49 @@ router.put('/users/:id', (req, res) => {
         id: userID,
         name,
         email,
-
     }
+    res.status(200).send({
+        status: 200,
+        message: "User complete Updated Successfully!"
+    })
 })
 
 
 
+// router.patch('/users/:id', (req, res) => {
+//     const userid = (req.params.id);
+
+//     const { name, email } = req.body;
+//     const userIndex = myusers.findIndex((user) => userid === user.id)
+//     console.log(userIndex);
+
+
+
+//     res.status(200).send({ status: 200, message: "user Partially updated Successfully!" })
+// })
+
+router.patch('/users:id', (req, res) => {
+
+    const { name, email } = req.body;
+    const userid = Number(req.params.id);
+    const userindex = myusers.findIndex((user) => userid = user.id);
+
+    if (userindex === -1) {
+        return res.status(400).send({
+            status: 400,
+            message: "user not found"
+        })
+    }
+
+    if (name) {
+        myusers[userindex].name = req.name;
+    }
+
+    if (email) {
+        myusers[userindex].email = req.email;
+    }
+
+    res.status(200).send({ status: 200, message: "user Partially Updated Successfully!", data: [userindex] })
 
 
 
@@ -131,4 +167,5 @@ router.put('/users/:id', (req, res) => {
 
 
 
-export default router;
+
+})
